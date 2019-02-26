@@ -7,6 +7,8 @@ So far my test environment is postgres running in Kubernetes on a MacBook Pro wi
 
 A client is provided - the tests below are from the client making 50 concurrent async calls to the service.
 
+Example client call: `dotnet run bin/Debug/netcoreapp2.2/client.dll -s Go -n 50 -l`
+
 ### Current Results
 
 Test case | Avg time to response | Avg time to first record | Avg time to all | Server Memory Usage (est) | Server CPU (est)
