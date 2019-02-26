@@ -1,0 +1,11 @@
+/Users/nickfr/Documents/Development/repos/CupCake/client/bin/Debug/netcoreapp2.2/client.deps.json
+/Users/nickfr/Documents/Development/repos/CupCake/client/bin/Debug/netcoreapp2.2/client.runtimeconfig.json
+/Users/nickfr/Documents/Development/repos/CupCake/client/bin/Debug/netcoreapp2.2/client.runtimeconfig.dev.json
+/Users/nickfr/Documents/Development/repos/CupCake/client/bin/Debug/netcoreapp2.2/client.dll
+/Users/nickfr/Documents/Development/repos/CupCake/client/bin/Debug/netcoreapp2.2/client.pdb
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.csprojAssemblyReference.cache
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.csproj.CoreCompileInputs.cache
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.AssemblyInfoInputs.cache
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.AssemblyInfo.cs
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.dll
+/Users/nickfr/Documents/Development/repos/CupCake/client/obj/Debug/netcoreapp2.2/client.pdb
