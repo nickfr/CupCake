@@ -1,0 +1,17 @@
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+*.nupkg
+*.obj
+*.pch
+*.pdb
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
+*.scc
+
+.DS_Store*
