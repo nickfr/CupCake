@@ -16,4 +16,5 @@ Test case | Avg time to response | Avg time to first record | Avg time to all | 
 ASP.NET Core 2.2, load data into List<string> |115s|115s|128s|5.6GB|150s
 ASP.NET Core 2.2, streaming |57s|57s|104s|170MB|77s
 Go|44s|44s|108s|8.6MB|105s
+ASP.NET Core 3 preview 2, async stream|0.3s|43s|138s|203MB|150s
  
