@@ -1,6 +1,6 @@
 #!/bin/bash
 
-helm install --name service-test-postgres -f values.yaml stable/postgresql
+helm install --name service-test-postgres --namespace cupcake -f values.yaml stable/postgresql
 
 ## to fully delete
 # helm delete service-test-postgres

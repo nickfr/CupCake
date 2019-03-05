@@ -41,7 +41,10 @@ namespace cupcake_aspnet.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<string>>> GetAsync()
         {
-            using (var connection = await CreateConnectionAsync("Server=localhost;Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=JKQQRLrAprfvJvix4LdkN[;Timeout=30;"))
+            var server = Environment.GetEnvironmentVariable("CUPCAKE_DB");
+            if(string.IsNullOrEmpty(server))
+                server = "localhost";
+            using (var connection = await CreateConnectionAsync($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=JKQQRLrAprfvJvix4LdkN[;Timeout=30;"))
             {
                 using (var command = new Npgsql.NpgsqlCommand())
                 {

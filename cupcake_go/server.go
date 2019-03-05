@@ -15,16 +15,20 @@ var mu sync.Mutex
 var count int
 
 func main() {
+	
 	http.HandleFunc("/get", get)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
-	pid, num := os.Getpid(), getID()
-
+	pid, num, dbs := os.Getpid(), getID(), os.Getenv("CUPCAKE_DB")
+	if dbs == "" {
+		dbs = "localhost"
+	}
+	fmt.Printf("Database on %s\n",dbs)
 	fmt.Printf("%d calling %d\n", pid, num)
 
-	conn := getConnectionString("localhost", 5432, "postgres", "JKQQRLrAprfvJvix4LdkN[", "postgres")
+	conn := getConnectionString(dbs, 5432, "postgres", "JKQQRLrAprfvJvix4LdkN[", "postgres")
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err)
