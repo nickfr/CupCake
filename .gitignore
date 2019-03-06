@@ -13,5 +13,7 @@
 *.pidb
 *.log
 *.scc
+*.exe
+*.tgz
 
 .DS_Store*

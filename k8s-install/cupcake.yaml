@@ -1,0 +1,143 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: go-svc-dep
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-go
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-go
+    spec:
+      containers:
+        - name: go-svc
+          image: riskfirstacr.azurecr.io/cupcake/go-svc:1.0
+          ports:
+            - containerPort: 8000
+          env:
+          - name: CUPCAKE_DB
+            value: service-test-postgres-postgresql.cupcake.svc.cluster.local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-svc
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  type: ClusterIP 
+  selector:
+    app: cupcake-go
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: asp-svc-dep
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-aspnet
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-aspnet
+    spec:
+      containers:
+        - name: asp-svc
+          image: riskfirstacr.azurecr.io/cupcake/aspnet-svc:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: CUPCAKE_DB
+            value: service-test-postgres-postgresql.cupcake.svc.cluster.local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnet-svc
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  type: ClusterIP 
+  selector:
+    app: cupcake-aspnet
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+
+###
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: asp3-svc-dep
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-aspnet3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-aspnet3
+    spec:
+      containers:
+        - name: asp3-svc
+          image: riskfirstacr.azurecr.io/cupcake/aspnet3-async-enumerable-svc:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: CUPCAKE_DB
+            value: service-test-postgres-postgresql.cupcake.svc.cluster.local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnet3-svc
+  namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  type: ClusterIP 
+  selector:
+    app: cupcake-aspnet3
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
