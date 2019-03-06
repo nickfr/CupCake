@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package cupcake_service;
+
+message EmptyRequest {};
+
+
+service CupCakeService {
+    rpc Get(EmptyRequest) returns (stream CupCakeResult) {}
+}
+
+message CupCakeResult {
+    string data = 1;
+}
