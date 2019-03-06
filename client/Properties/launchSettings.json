@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "client": {
+      "commandName": "Project",
+      "commandLineArgs": "-s Asp"
+    }
+  }
+}

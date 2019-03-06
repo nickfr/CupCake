@@ -19,7 +19,10 @@ namespace cupcake_aspnet
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-          
+                .ConfigureAppConfiguration(config =>
+                {
+                    config.AddEnvironmentVariables(prefix: "CUPCAKE_");
+                })
                 .UseStartup<Startup>();
     }
 }

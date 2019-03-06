@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 
 	_ "github.com/lib/pq"
@@ -15,20 +16,26 @@ var mu sync.Mutex
 var count int
 
 func main() {
-	
+
 	http.HandleFunc("/get", get)
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
-	pid, num, dbs := os.Getpid(), getID(), os.Getenv("CUPCAKE_DB")
-	if dbs == "" {
-		dbs = "localhost"
+	pid, num := os.Getpid(), getID()
+
+	db_server := getEnv("CUPCAKE_DBSERVER", "localhost")
+	db_port, err := strconv.ParseInt(getEnv("CUPCAKE_DBPORT", "5432"), 10, 32)
+	if err != nil {
+		panic(err)
 	}
-	fmt.Printf("Database on %s\n",dbs)
+	db_name := getEnv("CUPCAKE_DBNAME", "postgres")
+	db_user := getEnv("CUPCAKE_DBUSER", "postgres")
+	db_pwd := getEnv("CUPCAKE_DBPASSWORD", "password1")
+	fmt.Printf("Database on %s\n", db_server)
 	fmt.Printf("%d calling %d\n", pid, num)
 
-	conn := getConnectionString(dbs, 5432, "postgres", "password1", "postgres")
+	conn := getConnectionString(db_server, int(db_port), db_user, db_pwd, db_name)
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err)
@@ -75,4 +82,12 @@ func getID() int {
 	defer mu.Unlock()
 	count++
 	return count
+}
+
+func getEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return defaultValue
+	}
+	return value
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace cupcake_aspnet3.Controllers
 {
@@ -12,6 +13,12 @@ namespace cupcake_aspnet3.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IConfiguration config;
+        public ValuesController(IConfiguration config)
+        {
+            this.config = config;
+        }
+
         protected async Task<NpgsqlConnection> CreateConnectionAsync(string connectionString)
         {
             var connection = new NpgsqlConnection { ConnectionString = connectionString };
@@ -43,10 +50,12 @@ namespace cupcake_aspnet3.Controllers
         {
             var pid = System.Diagnostics.Process.GetCurrentProcess().Id;
             Console.WriteLine($"Get {pid}");
-            var server = Environment.GetEnvironmentVariable("CUPCAKE_DB");
-            if(string.IsNullOrEmpty(server))
-                server = "localhost";
-            using (var connection = await CreateConnectionAsync($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=password1;Timeout=30;"))
+            var server = config.GetValue("DBSERVER", "localhost");
+            var port = config.GetValue("DBPORT", "5432");
+            var dbname = config.GetValue("DBNAME", "postgres");
+            var user = config.GetValue("DBUSER", "postgres");
+            var password = config.GetValue("DBPASSWORD", "password1");
+            using (var connection = await CreateConnectionAsync($"Server={server};Port={port};Database={dbname};Persist Security Info=False;User ID={user};Password={password};Timeout=30;"))
             {
                 using (var command = new Npgsql.NpgsqlCommand())
                 {
