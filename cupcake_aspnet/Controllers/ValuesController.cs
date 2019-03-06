@@ -44,7 +44,7 @@ namespace cupcake_aspnet.Controllers
             var server = Environment.GetEnvironmentVariable("CUPCAKE_DB");
             if(string.IsNullOrEmpty(server))
                 server = "localhost";
-            using (var connection = await CreateConnectionAsync($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=JKQQRLrAprfvJvix4LdkN[;Timeout=30;"))
+            using (var connection = await CreateConnectionAsync($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=password1;Timeout=30;"))
             {
                 using (var command = new Npgsql.NpgsqlCommand())
                 {

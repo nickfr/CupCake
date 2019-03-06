@@ -48,7 +48,9 @@ namespace cupcake_aspnet.Controllers
             var pid = System.Diagnostics.Process.GetCurrentProcess().Id;
             Console.WriteLine($"Get {pid}");
             var server = Environment.GetEnvironmentVariable("CUPCAKE_DB");
-            using (var connection = CreateConnection($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=JKQQRLrAprfvJvix4LdkN[;Timeout=300;Pooling=false"))
+            if(string.IsNullOrEmpty(server))
+                server = "localhost";
+            using (var connection = CreateConnection($"Server={server};Port=5432;Database=postgres;Persist Security Info=False;User ID=postgres;Password=XXXXXXJKQQRLrAprfvJvix4LdkN[;Timeout=300;Pooling=false"))
             {
                 using (var command = new Npgsql.NpgsqlCommand())
                 {

@@ -28,7 +28,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Database on %s\n",dbs)
 	fmt.Printf("%d calling %d\n", pid, num)
 
-	conn := getConnectionString(dbs, 5432, "postgres", "JKQQRLrAprfvJvix4LdkN[", "postgres")
+	conn := getConnectionString(dbs, 5432, "postgres", "password1", "postgres")
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		panic(err)
