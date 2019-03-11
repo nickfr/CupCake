@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: go-svc-dep
+  #namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-go
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-go
+    spec:
+      containers:
+        - name: go-svc
+          image: riskfirstacr.azurecr.io/cupcake/go-svc:1.0
+          ports:
+            - containerPort: 8000
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: go-svc
+ labels:
+   app: cupcake
+spec:
+ type: ClusterIP 
+ selector:
+   app: cupcake-go
+ ports:
+ - port: 80
+   targetPort: 8000
+   protocol: TCP

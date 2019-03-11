@@ -23,19 +23,29 @@ namespace cupcake_client.Controllers
             this.config = config;
         }
         // GET api/values
-        [HttpGet("{requestType}")]
-        public async Task<ActionResult<CupcakeResponse>> Get(RequestType requestType)
-        {
-            (bool supported, DefinitionAttribute attr) = DefinitionHelper.GetDefinition(requestType);
-            if (!supported)
-                return BadRequest($"{requestType} not supported");
+        [HttpGet("stream/{requestType}")]
+        public async Task<ActionResult<CupcakeResponse>> GetAsync(string requestType)
+        {           
 
-            var uri = config.GetValue<string>(attr.UrlEnvVar);
-            
+            var uri = config.GetValue<string>($"{requestType.ToUpper()}_URL");
+            if (string.IsNullOrEmpty(uri))
+                return NotFound();
 
-            return attr.UseStreaming ? Ok(await CallAsync(uri)) : Ok(await CallSync(uri));
+            return Ok(await CallAsync(uri));
 
         }
+        [HttpGet("{requestType}")]
+        public async Task<ActionResult<CupcakeResponse>> GetSync(string requestType)
+        {
+
+            var uri = config.GetValue<string>($"{requestType.ToUpper()}_URL");
+            if (string.IsNullOrEmpty(uri))
+                return NotFound();
+
+            return Ok(await CallSync(uri));
+
+        }
+
         private async Task<CupcakeResponse> CallAsync(string uri)
         {
             var mem = (double)GC.GetTotalMemory(true);
@@ -108,11 +118,10 @@ namespace cupcake_client.Controllers
                 var time1 = watch.ElapsedMilliseconds;
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
-                var time2 = watch.ElapsedMilliseconds;
-
+                
                 var arr = JsonConvert.DeserializeObject<string[]>(body);
                 var counts = arr.SelectMany(x => x.ToCharArray()).GroupBy(x => x).ToDictionary(k => k.Key, v => v.Count());
-
+                var time2 = watch.ElapsedMilliseconds;
                 mem = (GC.GetTotalMemory(false) - mem) / (1024 * 1024);
                 return new CupcakeResponse
                 {

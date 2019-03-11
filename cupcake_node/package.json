@@ -1,0 +1,20 @@
+{
+  "name": "cupcake_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "event-stream": "^4.0.1",
+    "express": "^4.16.4",
+    "expressjs": "^1.0.1",
+    "jsonstream": "^1.0.3",
+    "pg": "^7.8.2",
+    "pg-query-stream": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

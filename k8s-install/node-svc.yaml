@@ -1,0 +1,65 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-svc-dep
+  #namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-node
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-node
+    spec:
+      containers:
+        - name: node-svc
+          image: riskfirstacr.azurecr.io/cupcake/node-svc:1.0
+          ports:
+            - containerPort: 3000
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: node-svc
+ labels:
+   app: cupcake
+spec:
+ type: ClusterIP 
+ selector:
+   app: cupcake-node
+ ports:
+ - port: 80
+   targetPort: 3000
+   protocol: TCP

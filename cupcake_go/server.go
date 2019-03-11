@@ -18,7 +18,7 @@ var count int
 func main() {
 
 	http.HandleFunc("/get", get)
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
 func get(w http.ResponseWriter, r *http.Request) {

@@ -15,7 +15,7 @@ I'm sure this one is going to get a lot better
 
 To build the dockerfile
 
-`docker build . -t riskfirstacr.azurecr.io/cupcake/aspnet3-async-enumerable-svc:1.0`
+`docker build . -t riskfirstacr.azurecr.io/cupcake/aspnet3-svc:1.0`
 
 To push it to azure first login (Credentials available in portal)
 
@@ -23,4 +23,4 @@ To push it to azure first login (Credentials available in portal)
 
 Then push the image
 
-`docker push riskfirstacr.azurecr.io/cupcake/aspnet3-async-enumerable-svc:1.0`
+`docker push riskfirstacr.azurecr.io/cupcake/aspnet3-svc:1.0`

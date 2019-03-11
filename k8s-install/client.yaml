@@ -1,0 +1,52 @@
+
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cupcake-client-dep
+  #namespace: cupcake
+  labels:
+    app: cupcake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cupcake-client
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-client
+    spec:
+      containers:
+        - name: go-svc
+          image: riskfirstacr.azurecr.io/cupcake/client:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNET_URL
+            value: http://aspnet-svc.default.svc.cluster.local/api/stream
+          - name: ASPNET3_URL
+            value: http://aspnet3-svc.default.svc.cluster.local/api/values
+          - name: GO_URL
+            value: http://go-svc.default.svc.cluster.local/get
+          - name: NODE_URL
+            value: http://node-svc.default.svc.cluster.local/get
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cupcake-client-svc
+  labels:
+    app: cupcake
+spec:
+  type: NodePort
+  ports:
+   - port: 80
+  selector:
+   app: cupcake-client
