@@ -23,7 +23,7 @@ spec:
         app: cupcake-client
     spec:
       containers:
-        - name: go-svc
+        - name: cupcake-client
           image: riskfirstacr.azurecr.io/cupcake/client:1.0
           ports:
             - containerPort: 80

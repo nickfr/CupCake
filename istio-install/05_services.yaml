@@ -1,0 +1,267 @@
+###############################################################
+# Aspnet service
+###############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnet-svc
+  labels:
+    app: cupcake
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: cupcake-aspnet  
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aspnet-svc-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-aspnet
+        version: v1
+    spec:
+      containers:
+        - name: aspnet-svc
+          image: riskfirstacr.azurecr.io/cupcake/aspnet-svc:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+---
+###############################################################
+# Aspnet3 service
+###############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnet3-svc
+  labels:
+    app: cupcake
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: cupcake-aspnet3
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aspnet3-svc-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-aspnet3
+        version: v1
+    spec:
+      containers:
+        - name: aspnet3-svc
+          image: riskfirstacr.azurecr.io/cupcake/aspnet3-svc:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+---
+###############################################################
+# Go service
+###############################################################
+apiVersion: v1
+kind: Service
+metadata:
+ name: go-svc
+ labels:
+   app: cupcake
+spec:
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+  selector:
+   app: cupcake-go 
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: go-svc-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-go
+        version: v1
+    spec:
+      containers:
+        - name: go-svc
+          image: riskfirstacr.azurecr.io/cupcake/go-svc:1.0
+          ports:
+            - containerPort: 8000
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+---
+###############################################################
+# Node service
+###############################################################
+apiVersion: v1
+kind: Service
+metadata:
+ name: node-svc
+ labels:
+    app: cupcake
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: cupcake-node 
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-svc-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-node
+        version: v1
+    spec:
+      containers:
+        - name: node-svc
+          image: riskfirstacr.azurecr.io/cupcake/node-svc:1.0
+          ports:
+            - containerPort: 3000
+          env:
+          - name: CUPCAKE_DBSERVER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbServer
+          - name: CUPCAKE_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbName
+          - name: CUPCAKE_DBUSER
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbUser
+          - name: CUPCAKE_DBPASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cupcake-config
+                key: dbPass
+---
+###############################################################
+# Client app
+###############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-svc
+  labels:
+    app: cupcake
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: cupcake-client
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cupcake-client-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cupcake-client
+        version: v1
+    spec:
+      containers:
+        - name: cupcake-client
+          image: riskfirstacr.azurecr.io/cupcake/client:1.0
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNET_URL
+            value: http://aspnet-svc.default.svc.cluster.local/api/stream
+          - name: ASPNET3_URL
+            value: http://aspnet3-svc.default.svc.cluster.local/api/values
+          - name: GO_URL
+            value: http://go-svc.default.svc.cluster.local/get
+          - name: NODE_URL
+            value: http://node-svc.default.svc.cluster.local/get
+---

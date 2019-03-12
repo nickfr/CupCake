@@ -21,7 +21,7 @@ spec:
         app: cupcake-aspnet
     spec:
       containers:
-        - name: aspnetk-svc
+        - name: aspnet-svc
           image: riskfirstacr.azurecr.io/cupcake/aspnet-svc:1.0
           ports:
             - containerPort: 80

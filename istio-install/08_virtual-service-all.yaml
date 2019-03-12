@@ -1,0 +1,65 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: client-svc
+spec:
+  hosts:
+  - client-svc
+  http:
+  - route:
+    - destination:
+        host: client-svc
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: node-svc
+spec:
+  hosts:
+  - node-svc
+  http:
+  - route:
+    - destination:
+        host: client-svc
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: go-svc
+spec:
+  hosts:
+  - go-svc
+  http:
+  - route:
+    - destination:
+        host: client-svc
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: aspnet3-svc
+spec:
+  hosts:
+  - aspnet3-svc
+  http:
+  - route:
+    - destination:
+        host: client-svc
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: aspnet-svc
+spec:
+  hosts:
+  - aspnet-svc
+  http:
+  - route:
+    - destination:
+        host: client-svc
+        subset: v1
+---

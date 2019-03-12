@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using cupcake_client.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
 namespace cupcake_client.Controllers
@@ -26,7 +27,7 @@ namespace cupcake_client.Controllers
         [HttpGet("stream/{requestType}")]
         public async Task<ActionResult<CupcakeResponse>> GetAsync(string requestType)
         {           
-
+            
             var uri = config.GetValue<string>($"{requestType.ToUpper()}_URL");
             if (string.IsNullOrEmpty(uri))
                 return NotFound();
@@ -55,6 +56,7 @@ namespace cupcake_client.Controllers
                 watch.Start();
                 using (var request = new HttpRequestMessage(HttpMethod.Get, uri))
                 {
+                    CopyTraceHeaders(request.Headers);
                     client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
                     long time2 = 0, time3 = 0, time4 = 0, time5 = 0;
                     var time1 = watch.ElapsedMilliseconds;
@@ -112,8 +114,10 @@ namespace cupcake_client.Controllers
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                CopyTraceHeaders(client.DefaultRequestHeaders);
                 var watch = new Stopwatch();
                 watch.Start();
+                
                 var response = await client.GetAsync(uri);
                 var time1 = watch.ElapsedMilliseconds;
                 response.EnsureSuccessStatusCode();
@@ -131,6 +135,25 @@ namespace cupcake_client.Controllers
                     Memory = mem,
                     Counts = counts
                 };
+            }
+        }
+
+        private void CopyTraceHeaders(HttpRequestHeaders outgoingHeaders)
+        {
+            CopyHeader(outgoingHeaders, "x-request-id");
+            CopyHeader(outgoingHeaders, "x-b3-traceid");
+            CopyHeader(outgoingHeaders, "x-b3-spanid");
+            CopyHeader(outgoingHeaders, "x-b3-parentspanid");
+            CopyHeader(outgoingHeaders, "x-b3-sampled");
+            CopyHeader(outgoingHeaders, "x-b3-flags");
+        }
+
+        private void CopyHeader(HttpRequestHeaders outgoingHeaders, string headerKey)
+        {
+            if(HttpContext.Request.Headers.TryGetValue(headerKey, out StringValues headerValue))
+            {
+                Console.WriteLine($"Propagating header {headerKey} to outgoing message: {headerValue}");
+                outgoingHeaders.Add(headerKey, (IEnumerable<string>)headerValue);
             }
         }
     }

@@ -26,6 +26,7 @@ namespace cupcake_client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddOpenTracing();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
